@@ -12,7 +12,7 @@ Player::Player(GameMechs* thisGMRef)
     playerPos.symbol = '*'; */ // USCOM: initial code
 
     playerPosList = new objPosArrayList();
-    objPos initialPosition(mainGameMechsRef->getBoardSizeX() / 2, mainGameMechsRef->getBoardSizeY() / 2, '*');
+    objPos initialPosition(mainGameMechsRef->getBoardSizeX() / 2, mainGameMechsRef->getBoardSizeY() / 2, '@');
     playerPosList->insertHead(initialPosition);
 }
 
@@ -142,7 +142,7 @@ void Player::movePlayer()
             return;
     }
 
-    objPos newHead(newX, newY, '*');
+    objPos newHead(newX, newY, '@');
     playerPosList->insertHead(newHead);
 
     // if (myDir != STOP){
@@ -177,7 +177,7 @@ void Player::growPlayer()
             return;
     }
 
-    objPos newHead(newX, newY, '*');
+    objPos newHead(newX, newY, '@');
     playerPosList->insertHead(newHead);
 
 }

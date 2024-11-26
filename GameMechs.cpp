@@ -103,8 +103,8 @@ void GameMechs::generateFood(const objPosArrayList& snakeBody)
 
     while (!validPosition)
     {
-        x = rand() % boardSizeX;
-        y = rand() % boardSizeY;
+        x = 1 + rand() % (boardSizeX - 2);
+        y = 1 + rand() % (boardSizeY - 2);
 
         validPosition = true;
         for (int i = 0; i < snakeBody.getSize(); i++)
@@ -118,5 +118,5 @@ void GameMechs::generateFood(const objPosArrayList& snakeBody)
         }
     }
 
-    food.setObjPos(x, y, '@');
+    food.setObjPos(x, y, '*');
 }

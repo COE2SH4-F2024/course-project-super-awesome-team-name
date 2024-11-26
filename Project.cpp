@@ -40,14 +40,6 @@ int main(void)
         // MacUILib_printf("HELLLLLLLLLLLLLLLOOOOOOOOOOOOO");
     }
 
-    if (myGM->getExitFlagStatus())
-    {
-        MacUILib_printf("Game Over: Force quit.");
-    }
-    else if (myGM->getLoseFlagStatus())
-    {
-        MacUILib_printf("Game Over: You died.");
-    }
     // MacUILib_printf("Hello");
     CleanUp();
 
@@ -174,11 +166,21 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
+
+    MacUILib_clearScreen();
+
+    if (myGM->getLoseFlagStatus())
+    {
+        MacUILib_printf("\nGame Over: You died.\n");
+    }
+    else if (myGM->getExitFlagStatus())
+    {
+        MacUILib_printf("\nGame Over: Force quit.\n");
+    }
+
     // USER ADDED: delete pointers
     delete myPlayer;
     delete myGM;
-
-    MacUILib_clearScreen();    
 
     MacUILib_uninit();
 }
