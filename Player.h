@@ -25,9 +25,12 @@ class Player
         void movePlayer();
 
         // More methods to be added here
+        objPosArrayList* getPlayerPosList() const;
+        void growPlayer();
 
     private:
-        objPos playerPos; // Upgrade this in iteration 3.       
+        // objPos playerPos; // Upgrade this in iteration 3. 
+        objPosArrayList* playerPosList;      
         enum Dir myDir;
 
         // Need a reference to the Main Game Mechanisms

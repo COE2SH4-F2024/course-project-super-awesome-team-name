@@ -7,21 +7,32 @@ Player::Player(GameMechs* thisGMRef)
     myDir = STOP;
 
     // more actions to be included
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX()/2;
+    /* playerPos.pos->x = mainGameMechsRef->getBoardSizeX()/2;
     playerPos.pos->y = mainGameMechsRef->getBoardSizeY()/2;
-    playerPos.symbol = '*';
+    playerPos.symbol = '*'; */ // USCOM: initial code
+
+    playerPosList = new objPosArrayList();
+    objPos initialPosition(mainGameMechsRef->getBoardSizeX() / 2, mainGameMechsRef->getBoardSizeY() / 2, '*');
+    playerPosList->insertHead(initialPosition);
 }
 
 
 Player::~Player()
 {
     // delete any heap members here
+    delete playerPosList;
 }
 
 objPos Player::getPlayerPos() const
 {
     // return the reference to the playerPos arrray list
-    return playerPos;
+    // return playerPos; <- initial code
+    return playerPosList->getHeadElement();
+}
+
+objPosArrayList* Player::getPlayerPosList() const
+{
+    return playerPosList;
 }
 
 void Player::updatePlayerDir()
@@ -90,8 +101,11 @@ void Player::updatePlayerDir()
 
 void Player::movePlayer()
 {
+    objPos headPos = playerPosList->getHeadElement();
+    int newX = headPos.pos->x;
+    int newY = headPos.pos->y;
     // PPA3 Finite State Machine logic
-    switch (myDir)
+    /* switch (myDir)
     {
         case UP: // cannot be DOWN
             playerPos.pos->y = (playerPos.pos->y - 1) > 0? playerPos.pos->y - 1 : mainGameMechsRef->getBoardSizeY() - 2; // to account for border, decrease index range
@@ -108,11 +122,62 @@ void Player::movePlayer()
         case STOP:
         default:
             break;
+    } */ // USCOM: initial code
+    switch (myDir)
+    {
+        case UP: // cannot be DOWN
+            newY = (headPos.pos->y - 1) > 0 ? headPos.pos->y - 1 : mainGameMechsRef->getBoardSizeY() - 2; // to account for border, decrease index range
+            break;
+        case LEFT: // cannot be RIGHT
+            newX = (headPos.pos->x - 1) > 0 ? headPos.pos->x - 1 : mainGameMechsRef->getBoardSizeX() - 2;
+            break;
+        case DOWN: // cannot be UP
+            newY = (headPos.pos->y + 1) < mainGameMechsRef->getBoardSizeY() - 1 ? headPos.pos->y + 1 : 1;
+            break;
+        case RIGHT: // cannot be LEFT
+            newX = (headPos.pos->x + 1) < mainGameMechsRef->getBoardSizeX() - 1 ? headPos.pos->x + 1 : 1;
+            break;
+        case STOP:
+        default:
+            return;
     }
+
+    objPos newHead(newX, newY, '*');
+    playerPosList->insertHead(newHead);
 
     // if (myDir != STOP){
     //     move_Count++;
     // }
+    playerPosList->removeTail();
 }
 
 // More methods to be added
+void Player::growPlayer()
+{
+    objPos headPos = playerPosList->getHeadElement();
+    int newX = headPos.pos->x;
+    int newY = headPos.pos->y;
+
+    switch (myDir)
+    {
+        case UP: // cannot be DOWN
+            newY = (headPos.pos->y - 1) > 0 ? headPos.pos->y - 1 : mainGameMechsRef->getBoardSizeY() - 2; // to account for border, decrease index range
+            break;
+        case LEFT: // cannot be RIGHT
+            newX = (headPos.pos->x - 1) > 0 ? headPos.pos->x - 1 : mainGameMechsRef->getBoardSizeX() - 2;
+            break;
+        case DOWN: // cannot be UP
+            newY = (headPos.pos->y + 1) < mainGameMechsRef->getBoardSizeY() - 1 ? headPos.pos->y + 1 : 1;
+            break;
+        case RIGHT: // cannot be LEFT
+            newX = (headPos.pos->x + 1) < mainGameMechsRef->getBoardSizeX() - 1 ? headPos.pos->x + 1 : 1;
+            break;
+        case STOP:
+        default:
+            return;
+    }
+
+    objPos newHead(newX, newY, '*');
+    playerPosList->insertHead(newHead);
+
+}

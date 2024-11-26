@@ -27,16 +27,23 @@ objPos::~objPos()
 objPos::objPos(const objPos &reference)
 {
     // calls self-defined copy assignment operator to replicate functionality
-    *(this) = reference;
+    //*(this) = reference; // USCOM: initial code
+    pos = new Pos;
+    pos->x = reference.pos->x;
+    pos->y = reference.pos->y;
+    symbol = reference.symbol;
 }
 
 objPos& objPos::operator=(const objPos &reference)
 {
-    pos->x = reference.pos->x;
-    pos->y = reference.pos->y;
-    symbol = reference.getSymbol();
+    if (this != &reference)
+    {
+        pos->x = reference.pos->x;
+        pos->y = reference.pos->y;
+        symbol = reference.symbol; // USCOM: initially symbol = reference.getSymbol();
+    }
+    return *this;
 }
-
 
 void objPos::setObjPos(objPos o)
 {
@@ -54,11 +61,11 @@ void objPos::setObjPos(int xPos, int yPos, char sym)
 
 objPos objPos::getObjPos() const
 {
-    objPos returnPos;
+    /* objPos returnPos;
     returnPos.pos->x = pos->x;
     returnPos.pos->y = pos->y;
-    returnPos.symbol = symbol;
-    
+    returnPos.symbol = symbol; */ // USCOM: initial code
+    objPos returnPos(pos->x, pos->y, symbol);
     return returnPos;
 }
 

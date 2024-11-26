@@ -27,6 +27,9 @@ GameMechs::GameMechs(int boardX, int boardY)
 GameMechs::~GameMechs()
 {
     // no pointers/heap data members
+    
+    // Student Comment: The destructor is empty because the class
+    // has no dynamic memory management, meaning the destructor could be safely removed.
 }
 
 bool GameMechs::getExitFlagStatus() const
@@ -87,3 +90,33 @@ void GameMechs::clearInput()
 }
 
 // More methods should be added here
+objPos GameMechs::getFood() const
+{
+    return food;
+}
+
+void GameMechs::generateFood(const objPosArrayList& snakeBody)
+{
+    srand(time(0));
+    bool validPosition = false;
+    int x, y;
+
+    while (!validPosition)
+    {
+        x = rand() % boardSizeX;
+        y = rand() % boardSizeY;
+
+        validPosition = true;
+        for (int i = 0; i < snakeBody.getSize(); i++)
+        {
+            objPos snakeSegment = snakeBody.getElement(i);
+            if (snakeSegment.pos->x == x && snakeSegment.pos->y == y)
+            {
+                validPosition = false;
+                break;
+            }
+        }
+    }
+
+    food.setObjPos(x, y, '@');
+}

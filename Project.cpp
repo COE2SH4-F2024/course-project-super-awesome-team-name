@@ -28,18 +28,27 @@ int main(void)
 
     Initialize();
 
-    while(myGM->getExitFlagStatus() == false || myGM->getLoseFlagStatus() == false)  // USER ADDED: while gamemech ->getEFStatus
+    while(!myGM->getExitFlagStatus() && !myGM->getLoseFlagStatus())  // USER ADDED: while gamemech ->getEFStatus
     {
         // MacUILib_printf("Hello");
         GetInput();
         RunLogic();
-        MacUILib_printf("test bonjour");
+        // MacUILib_printf("test bonjour");
         DrawScreen();
         // MacUILib_printf("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOO");
         LoopDelay();
         // MacUILib_printf("HELLLLLLLLLLLLLLLOOOOOOOOOOOOO");
     }
-    MacUILib_printf("Hello");
+
+    if (myGM->getExitFlagStatus())
+    {
+        MacUILib_printf("Game Over: Force quit.");
+    }
+    else if (myGM->getLoseFlagStatus())
+    {
+        MacUILib_printf("Game Over: You died.");
+    }
+    // MacUILib_printf("Hello");
     CleanUp();
 
 }
@@ -55,44 +64,103 @@ void Initialize(void)
     myGM = new GameMechs();
     // initialize player obj myPlayer = new Player(myGM)
     myPlayer = new Player(myGM);
+
+    myGM->generateFood(*myPlayer->getPlayerPosList());
 }
 
 void GetInput(void)
 {
     if(MacUILib_hasChar())
     {
-        myGM->setInput(MacUILib_getChar());
+        char input = MacUILib_getChar();
+        if (input == 27)
+        {
+            myGM->setExitTrue();
+        }
+        else
+        {
+            myGM->setInput(input);
+        }
+        // myGM->setInput(MacUILib_getChar());
     }
 }
 
 void RunLogic(void)
 {
     myPlayer->updatePlayerDir();
-    myPlayer->movePlayer();
+
+    objPos playerPos = myPlayer->getPlayerPos();
+    objPos foodPos = myGM->getFood();
+
+    if (playerPos.isPosEqual(&foodPos))
+    {
+        myPlayer->growPlayer();
+        myGM->incrementScore();
+        myGM->generateFood(*myPlayer->getPlayerPosList());
+    }
+    else
+    {
+        myPlayer->movePlayer();
+    }
+
+    objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
+    objPos head = snakeBody->getHeadElement();
+
+    for (int i = 1; i < snakeBody->getSize(); i++)
+    {
+        objPos bodyPart = snakeBody->getElement(i);
+        if (head.isPosEqual(&bodyPart))
+        {
+            myGM->setLoseFlag();
+            break;
+        }
+    }
 }
 
 void DrawScreen(void)
 {
-    int i = 0, j = 0, k = 0;
-    int item_Printed = 0;
+    //int i = 0, j = 0, k = 0;
+    //int item_Printed = 0;
     MacUILib_clearScreen();
-    for (i = 0; i < myGM->getBoardSizeY(); i++)
+
+    objPos playerPos = myPlayer->getPlayerPos();
+    objPos foodPos = myGM->getFood();
+
+
+    for (int i = 0; i < myGM->getBoardSizeY(); i++)
     {
-        for (j = 0; j < myGM->getBoardSizeX(); j++)
+        for (int j = 0; j < myGM->getBoardSizeX(); j++)
         {
-            objPos playerPos = myPlayer->getPlayerPos();
+            bool isBodyPart = false;
+
+            objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
+            for (int k = 0; k < snakeBody->getSize(); k++)
+            {
+                objPos bodyPart = snakeBody->getElement(k);
+                if (bodyPart.pos->y == i && bodyPart.pos->x == j)
+                {
+                    isBodyPart = true;
+                    break;
+                }
+            }
+
             // item_Printed = 0; // find better implementation
             if (i == 0 || j == 0 || i == myGM->getBoardSizeY() - 1 || j == myGM->getBoardSizeX() - 1)
             {
                 MacUILib_printf("%c", '#');
             }
-            else if (playerPos.pos->y == i && playerPos.pos->x == j){
-                MacUILib_printf("%c", playerPos.getSymbol()); // add a playerpos variable to avoid calling function multiple times
+            else if (isBodyPart)
+            {
+                MacUILib_printf("%c", playerPos.getSymbol());
             }
-            else{
+            else if (foodPos.pos->y == i && foodPos.pos->x == j)
+            {
+                MacUILib_printf("%c", foodPos.getSymbol());
+            }
+            else
+            {
                 MacUILib_printf(" ");
             }
-
         }
         MacUILib_printf("\n");
     } 
