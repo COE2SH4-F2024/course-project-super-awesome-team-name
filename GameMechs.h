@@ -32,7 +32,7 @@ class GameMechs
         bool getLoseFlagStatus() const;
         void setLoseFlag();
 
-        char getInput() const;
+        char getInput() const; // USER ADDED COMMENT: should remove const keyword?
         void setInput(char this_input);
         void clearInput();
 
