@@ -9,8 +9,6 @@ using namespace std;
 #define DELAY_CONST 100000
 
 bool exitFlag;
-
-// USER ADDED COMMENT: make a global pointer to player and gamemech objects
 Player* myPlayer;
 GameMechs* myGM;
 
@@ -28,19 +26,14 @@ int main(void)
 
     Initialize();
 
-    while(!myGM->getExitFlagStatus() && !myGM->getLoseFlagStatus())  // USER ADDED: while gamemech ->getEFStatus
+    while(!myGM->getExitFlagStatus() && !myGM->getLoseFlagStatus())
     {
-        // MacUILib_printf("Hello");
         GetInput();
         RunLogic();
-        // MacUILib_printf("test bonjour");
         DrawScreen();
-        // MacUILib_printf("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOO");
         LoopDelay();
-        // MacUILib_printf("HELLLLLLLLLLLLLLLOOOOOOOOOOOOO");
     }
 
-    // MacUILib_printf("Hello");
     CleanUp();
 
 }
@@ -51,10 +44,7 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-    // exitFlag = false;
-    // initialize GM obj
     myGM = new GameMechs();
-    // initialize player obj myPlayer = new Player(myGM)
     myPlayer = new Player(myGM);
 
     myGM->generateFood(*myPlayer->getPlayerPosList());
@@ -73,7 +63,6 @@ void GetInput(void)
         {
             myGM->setInput(input);
         }
-        // myGM->setInput(MacUILib_getChar());
     }
 }
 
@@ -111,8 +100,6 @@ void RunLogic(void)
 
 void DrawScreen(void)
 {
-    //int i = 0, j = 0, k = 0;
-    //int item_Printed = 0;
     MacUILib_clearScreen();
 
     objPos playerPos = myPlayer->getPlayerPos();
@@ -136,7 +123,6 @@ void DrawScreen(void)
                 }
             }
 
-            // item_Printed = 0; // find better implementation
             if (i == 0 || j == 0 || i == myGM->getBoardSizeY() - 1 || j == myGM->getBoardSizeX() - 1)
             {
                 MacUILib_printf("%c", '#');
@@ -178,7 +164,6 @@ void CleanUp(void)
         MacUILib_printf("\nGame Over: Force quit.\n");
     }
 
-    // USER ADDED: delete pointers
     delete myPlayer;
     delete myGM;
 

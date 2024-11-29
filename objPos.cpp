@@ -40,7 +40,7 @@ objPos& objPos::operator=(const objPos &reference)
     {
         pos->x = reference.pos->x;
         pos->y = reference.pos->y;
-        symbol = reference.symbol; // USCOM: initially symbol = reference.getSymbol();
+        symbol = reference.symbol;
     }
     return *this;
 }
@@ -61,10 +61,6 @@ void objPos::setObjPos(int xPos, int yPos, char sym)
 
 objPos objPos::getObjPos() const
 {
-    /* objPos returnPos;
-    returnPos.pos->x = pos->x;
-    returnPos.pos->y = pos->y;
-    returnPos.symbol = symbol; */ // USCOM: initial code
     objPos returnPos(pos->x, pos->y, symbol);
     return returnPos;
 }

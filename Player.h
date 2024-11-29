@@ -29,11 +29,8 @@ class Player
         void growPlayer();
 
     private:
-        // objPos playerPos; // Upgrade this in iteration 3. 
         objPosArrayList* playerPosList;      
         enum Dir myDir;
-
-        // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
 };
 
