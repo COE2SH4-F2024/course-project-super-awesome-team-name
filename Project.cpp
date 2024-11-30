@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define DELAY_CONST 100000
+#define DELAY_CONST 25000
 
 bool exitFlag;
 Player* myPlayer;
@@ -102,8 +102,9 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
-    objPos playerPos = myPlayer->getPlayerPos();
+    // objPos playerPos = myPlayer->getPlayerPos(); <- Original code
     objPos foodPos = myGM->getFood();
+    objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
 
 
     for (int i = 0; i < myGM->getBoardSizeY(); i++)
@@ -112,13 +113,22 @@ void DrawScreen(void)
         {
             bool isBodyPart = false;
 
-            objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
+            // objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
             for (int k = 0; k < snakeBody->getSize(); k++)
             {
                 objPos bodyPart = snakeBody->getElement(k);
                 if (bodyPart.pos->y == i && bodyPart.pos->x == j)
                 {
                     isBodyPart = true;
+                    
+                    if (k == 0)
+                    {
+                        MacUILib_printf("%c", '@');
+                    }
+                    else
+                    {
+                        MacUILib_printf("%c", '0');
+                    }
                     break;
                 }
             }
@@ -127,21 +137,27 @@ void DrawScreen(void)
             {
                 MacUILib_printf("%c", '#');
             }
-            else if (isBodyPart)
-            {
-                MacUILib_printf("%c", playerPos.getSymbol());
-            }
-            else if (foodPos.pos->y == i && foodPos.pos->x == j)
+            else if (!isBodyPart && foodPos.pos->y == i && foodPos.pos->x == j)
             {
                 MacUILib_printf("%c", foodPos.getSymbol());
             }
-            else
+            else if (!isBodyPart)
             {
                 MacUILib_printf(" ");
             }
         }
         MacUILib_printf("\n");
-    } 
+    }
+
+    MacUILib_printf("Score: %d\t", myGM->getScore());
+    MacUILib_printf("Food Eaten: %d\n", myGM->getScore());
+
+    MacUILib_printf("Controls: ");
+    MacUILib_printf("[W] Up    ");
+    MacUILib_printf("[A] Left    ");
+    MacUILib_printf("[S] Down    ");
+    MacUILib_printf("[D] Right    ");
+    MacUILib_printf("[Esc] Quit\n");
 }
 
 void LoopDelay(void)
