@@ -6,11 +6,15 @@
 
 using namespace std;
 
-#define DELAY_CONST 25000
+#define DEFAULT_DELAY 25000
+#define SPEED_BOOST_DELAY 100
 
 bool exitFlag;
 Player* myPlayer;
 GameMechs* myGM;
+
+int currentDelay = DEFAULT_DELAY;
+int speedBoostTimer = 0;
 
 void Initialize(void);
 void GetInput(void);
@@ -47,7 +51,7 @@ void Initialize(void)
     myGM = new GameMechs();
     myPlayer = new Player(myGM);
 
-    myGM->generateFood(*myPlayer->getPlayerPosList());
+    myGM->initializeFoodBin();
 }
 
 void GetInput(void)
@@ -71,18 +75,50 @@ void RunLogic(void)
     myPlayer->updatePlayerDir();
 
     objPos playerPos = myPlayer->getPlayerPos();
-    objPos foodPos = myGM->getFood();
+    objPosArrayList* foodBin = myGM->getFoodBin();
 
-    if (playerPos.isPosEqual(&foodPos))
+    bool foodConsumed = false; // Student Comment: Flag to track if any food was consumed
+    int consumedFoodIndex = -1; // Student Comment: To track which food was consumed
+
+    for (int i = 0; i < foodBin->getSize(); i++)
     {
-        myPlayer->growPlayer();
-        myGM->incrementScore();
-        myGM->generateFood(*myPlayer->getPlayerPosList());
+        objPos food = foodBin->getElement(i);
+
+        if (playerPos.isPosEqual(&food))
+        {
+            foodConsumed = true;
+            consumedFoodIndex = i;
+
+            if (food.getSymbol() == '$')
+            {
+                myGM->applySpecialFoodEffect(i, myPlayer);
+
+                if (i == myGM->getSpecialFoodIndex1())
+                {
+                    speedBoostTimer = 200;
+                    currentDelay = SPEED_BOOST_DELAY;
+
+                    // Student Comment: Regenerate all food locations
+                    myGM->regenerateAllFood(*myPlayer->getPlayerPosList());
+                }
+                else if (i == myGM->getSpecialFoodIndex2())
+                {
+                    myGM->regenerateSpecialFoods(*myPlayer->getPlayerPosList());
+                }
+            }
+            else
+            {
+                myPlayer->growPlayer();
+                myGM->incrementScore();
+
+                myGM->regenerateFoodAt(i, *myPlayer->getPlayerPosList());
+            }
+
+            myGM->incrementFoodEaten();
+            break;
+        }
     }
-    else
-    {
-        myPlayer->movePlayer();
-    }
+    myPlayer->movePlayer();
 
     objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
     objPos head = snakeBody->getHeadElement();
@@ -103,9 +139,8 @@ void DrawScreen(void)
     MacUILib_clearScreen();
 
     // objPos playerPos = myPlayer->getPlayerPos(); <- Original code
-    objPos foodPos = myGM->getFood();
+    objPosArrayList* foodBin = myGM->getFoodBin();
     objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
-
 
     for (int i = 0; i < myGM->getBoardSizeY(); i++)
     {
@@ -133,36 +168,54 @@ void DrawScreen(void)
                 }
             }
 
-            if (i == 0 || j == 0 || i == myGM->getBoardSizeY() - 1 || j == myGM->getBoardSizeX() - 1)
+            if (!isBodyPart)
             {
-                MacUILib_printf("%c", '#');
-            }
-            else if (!isBodyPart && foodPos.pos->y == i && foodPos.pos->x == j)
-            {
-                MacUILib_printf("%c", foodPos.getSymbol());
-            }
-            else if (!isBodyPart)
-            {
-                MacUILib_printf(" ");
+                bool isFood = false;
+                for (int f = 0; f < foodBin->getSize(); f++)
+                {
+                    objPos food = foodBin->getElement(f);
+                    if (food.pos->y == i && food.pos->x == j)
+                    {
+                        isFood = true;
+                        MacUILib_printf("%c", food.getSymbol());
+                        break;
+                    }
+                }
+
+                if (!isFood)
+                {
+                    if (i == 0 || j == 0 || i == myGM->getBoardSizeY() - 1 || j == myGM->getBoardSizeX() - 1)
+                    {
+                        MacUILib_printf("#");
+                    }
+                    else
+                    {
+                        MacUILib_printf(" ");
+                    }
+                }
             }
         }
         MacUILib_printf("\n");
     }
 
     MacUILib_printf("Score: %d\t", myGM->getScore());
-    MacUILib_printf("Food Eaten: %d\n", myGM->getScore());
-
-    MacUILib_printf("Controls: ");
-    MacUILib_printf("[W] Up    ");
-    MacUILib_printf("[A] Left    ");
-    MacUILib_printf("[S] Down    ");
-    MacUILib_printf("[D] Right    ");
-    MacUILib_printf("[Esc] Quit\n");
+    MacUILib_printf("Food Eaten: %d\n", myGM->getFoodEaten());
+    MacUILib_printf("Controls: [W] Up [A] Left [S] Down [D] Right [Esc] Quit\n");
 }
 
 void LoopDelay(void)
 {
-    MacUILib_Delay(DELAY_CONST); // 0.1s delay
+    // MacUILib_Delay(DELAY_CONST); // 0.1s delay
+    if (speedBoostTimer > 0)
+    {
+        speedBoostTimer--;
+        if (speedBoostTimer == 0)
+        {
+            currentDelay = DEFAULT_DELAY;
+        }
+    }
+
+    MacUILib_Delay(currentDelay);
 }
 
 
@@ -174,6 +227,8 @@ void CleanUp(void)
     if (myGM->getLoseFlagStatus())
     {
         MacUILib_printf("\nGame Over: You died.\n");
+        MacUILib_printf("\nFinal Score: %d\n", myGM->getScore());
+        MacUILib_printf("Food Eaten: %d\n", myGM->getFoodEaten());
     }
     else if (myGM->getExitFlagStatus())
     {

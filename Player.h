@@ -27,6 +27,7 @@ class Player
         // More methods to be added here
         objPosArrayList* getPlayerPosList() const;
         void growPlayer();
+        void growBy(int length);
 
     private:
         objPosArrayList* playerPosList;      

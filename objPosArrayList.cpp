@@ -90,3 +90,16 @@ objPos objPosArrayList::getElement(int index) const
     }
     throw std::out_of_range("Index out of bounds");
 }
+
+// Student Comment: New setElement method implementation
+void objPosArrayList::setElement(int index, const objPos& newPos)
+{
+    if (index >= 0 && index < listSize)
+    {
+        aList[index] = newPos;
+    }
+    else
+    {
+        throw std::out_of_range("Index out of bounds");
+    }
+}

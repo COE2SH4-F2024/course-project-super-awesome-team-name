@@ -7,6 +7,8 @@
 #include "objPos.h"
 #include "objPosArrayList.h"
 
+class Player;
+
 using namespace std;
 
 class GameMechs
@@ -21,6 +23,12 @@ class GameMechs
         int boardSizeY;
 
         objPos food;
+        objPosArrayList foodBin; // Student Comment: Food bin for storing multiple food items
+        // Student Comment: Indices for the special food items
+        int specialFoodIndex1;
+        int specialFoodIndex2;
+
+        int foodEaten;
 
     public:
         GameMechs();
@@ -49,11 +57,25 @@ class GameMechs
         
         int getScore() const;
         void incrementScore();
+        void incrementScoreBy(int points);
         
         // More methods should be added here
         objPos getFood() const;
         void generateFood(const objPosArrayList& snakeBody);
-        
+
+        void initializeFoodBin(int numFoods = 5);
+        objPosArrayList* getFoodBin() const;
+        void regenerateFoodAt(int index, const objPosArrayList& snakeBody);
+        void applySpecialFoodEffect(int index, Player* player);
+
+        int getFoodEaten() const;
+        void incrementFoodEaten();
+
+        int getSpecialFoodIndex1() const;
+        int getSpecialFoodIndex2() const;
+
+        void regenerateAllFood(const objPosArrayList& snakeBody);
+        void regenerateSpecialFoods(const objPosArrayList& snakeBody);
 };
 
 #endif

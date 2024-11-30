@@ -135,3 +135,13 @@ void Player::growPlayer()
     playerPosList->insertHead(newHead);
 
 }
+
+void Player::growBy(int length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        objPos tail = playerPosList->getTailElement();
+        objPos newSegment(tail.pos->x, tail.pos->y, '0');
+        playerPosList->insertTail(newSegment);
+    }
+}
