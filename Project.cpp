@@ -1,7 +1,6 @@
 #include <iostream>
 #include "MacUILib.h"
 #include "objPos.h"
-
 #include "Player.h"
 
 using namespace std;
@@ -9,13 +8,16 @@ using namespace std;
 #define DEFAULT_DELAY 25000
 #define SPEED_BOOST_DELAY 100
 
+// Student Comment: Global game state variables
 bool exitFlag;
-Player* myPlayer;
-GameMechs* myGM;
+Player* myPlayer; // Student Comment: Player object representing the snake
+GameMechs* myGM; // Student Comment: Game mechanics object holding the game state
 
-int currentDelay = DEFAULT_DELAY;
-int speedBoostTimer = 0;
+// Student Comment: Special food game speed boost effect
+int currentDelay = DEFAULT_DELAY; // Student Comment: Delay for controlling game speed
+int speedBoostTimer = 0; // Student Comment: Timer to track speed boost duration
 
+// Student Comment: Function declarations
 void Initialize(void);
 void GetInput(void);
 void RunLogic(void);
@@ -23,11 +25,9 @@ void DrawScreen(void);
 void LoopDelay(void);
 void CleanUp(void);
 
-
-
 int main(void)
 {
-
+    // Student Comment: Initialize game state
     Initialize();
 
     while(!myGM->getExitFlagStatus() && !myGM->getLoseFlagStatus())

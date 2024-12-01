@@ -1,6 +1,7 @@
 #include "GameMechs.h"
 #include "Player.h"
 
+// Student Comment: Default constructor initializes game mechanics and random number generator
 GameMechs::GameMechs()
 {
     input = 0;
@@ -11,12 +12,13 @@ GameMechs::GameMechs()
     boardSizeX = 30;
     boardSizeY = 15;
 
-    srand(static_cast<unsigned int>(time(0)));
+    srand(static_cast<unsigned int>(time(0))); // Student Comment: Seed RNG
     foodEaten = 0;
     specialFoodIndex1 = 0;
     specialFoodIndex2 = 1;
 }
 
+// Student Comment: Constructor with custom board size
 GameMechs::GameMechs(int boardX, int boardY)
 {
     // GameMechs();
@@ -28,7 +30,7 @@ GameMechs::GameMechs(int boardX, int boardY)
     boardSizeX = boardX;
     boardSizeY = boardY;
 
-    srand(static_cast<unsigned int>(time(0)));
+    srand(static_cast<unsigned int>(time(0))); // Student Comment: Seed RNG
     specialFoodIndex1 = 0;
     specialFoodIndex2 = 1;
 }
@@ -42,6 +44,7 @@ GameMechs::~GameMechs()
     // has no dynamic memory management, meaning the destructor could be safely removed.
 }
 
+// Student Comment: Getters and setters
 bool GameMechs::getExitFlagStatus() const
 {
     return exitFlag;
@@ -51,7 +54,6 @@ bool GameMechs::getLoseFlagStatus() const
 {
     return loseFlag;
 }
-    
 
 char GameMechs::getInput() const
 {
@@ -68,6 +70,11 @@ void GameMechs::incrementScore()
     score++;
 }
 
+void GameMechs::incrementScoreBy(int points)
+{
+    score += points;
+}
+
 int GameMechs::getBoardSizeX() const
 {
     return boardSizeX;
@@ -77,7 +84,6 @@ int GameMechs::getBoardSizeY() const
 {
     return boardSizeY;
 }
-
 
 void GameMechs::setExitTrue()
 {
@@ -100,6 +106,7 @@ void GameMechs::clearInput()
 }
 
 // More methods should be added here
+// Student Comment: Food management
 objPos GameMechs::getFood() const
 {
     return food;
@@ -125,11 +132,7 @@ void GameMechs::incrementFoodEaten()
     foodEaten++;
 }
 
-void GameMechs::incrementScoreBy(int points)
-{
-    score += points;
-}
-
+// Student Comment: Generates a new food item ensuring no overlap with snake body or other food items
 void GameMechs::generateFood(const objPosArrayList& snakeBody)
 {
     bool validPosition = false;
@@ -141,6 +144,8 @@ void GameMechs::generateFood(const objPosArrayList& snakeBody)
         y = 1 + rand() % (boardSizeY - 2);
 
         validPosition = true;
+
+        // Student Comment: Check against snake body
         for (int i = 0; i < snakeBody.getSize(); i++)
         {
             objPos snakeSegment = snakeBody.getElement(i);
@@ -151,6 +156,7 @@ void GameMechs::generateFood(const objPosArrayList& snakeBody)
             }
         }
 
+        // Student Comment: Check against existing food
         for (int i = 0; i < foodBin.getSize(); i++) 
         {
             objPos existingFood = foodBin.getElement(i);
@@ -165,6 +171,7 @@ void GameMechs::generateFood(const objPosArrayList& snakeBody)
     food.setObjPos(x, y, '*');
 }
 
+// Student Comment: Initializes the food bin with multiple food items
 void GameMechs::initializeFoodBin(int numFoods)
 {
     for (int i = 0; i < numFoods; i++)
@@ -177,11 +184,13 @@ void GameMechs::initializeFoodBin(int numFoods)
     }
 }
 
+// Student Comment: Returns a pointer to the food bin
 objPosArrayList* GameMechs::getFoodBin() const
 {
     return const_cast<objPosArrayList*>(&foodBin);
 }
 
+// Student Comment: Regenerates a specific food item ensuring no overlap with the snake or other food items
 void GameMechs::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
 {
     if (index < 0 || index >= foodBin.getSize())
@@ -199,6 +208,7 @@ void GameMechs::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
 
         validPosition = true;
 
+        // Student Comment: Check against snake body
         for (int i = 0; i < snakeBody.getSize(); i++)
         {
             objPos snakeSegment = snakeBody.getElement(i);
@@ -209,6 +219,7 @@ void GameMechs::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
             }
         }
 
+        // Student Comment: Check against other food items
         if (validPosition)
         {
             for (int i = 0; i < foodBin.getSize(); i++)
@@ -235,6 +246,7 @@ void GameMechs::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
     foodBin.setElement(index, newFood);
 }
 
+// Student Comment: Applies effects of special food and regenerates it
 void GameMechs::applySpecialFoodEffect(int index, Player* player)
 {
     if (index == specialFoodIndex1)
@@ -250,6 +262,7 @@ void GameMechs::applySpecialFoodEffect(int index, Player* player)
     regenerateFoodAt(index, *player->getPlayerPosList());
 }
 
+// Student Comment: Regenerates all food items
 void GameMechs::regenerateAllFood(const objPosArrayList& snakeBody)
 {
     for (int i = 0; i < foodBin.getSize(); i++)
@@ -258,6 +271,7 @@ void GameMechs::regenerateAllFood(const objPosArrayList& snakeBody)
     }
 }
 
+// Student Comment: Regenerates only the special food items
 void GameMechs::regenerateSpecialFoods(const objPosArrayList& snakeBody)
 {
     regenerateFoodAt(specialFoodIndex1, snakeBody);
