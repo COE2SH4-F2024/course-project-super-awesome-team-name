@@ -27,7 +27,7 @@ void CleanUp(void);
 
 int main(void)
 {
-    // Student Comment: Initialize game state
+
     Initialize();
 
     while(!myGM->getExitFlagStatus() && !myGM->getLoseFlagStatus())
