@@ -109,14 +109,7 @@ void RunLogic(void)
                 {
                     speedBoostTimer = 200;
                     currentDelay = SPEED_BOOST_DELAY;
-
-                    // Student Comment: Regenerate all food locations
-                    // myFood->regenerateAllFood(*myPlayer->getPlayerPosList()); // Jethro -------------------------------- myGM
                 }
-                // else if (i == myFood->getSpecialFoodIndex2())
-                // {
-                //     // myFood->regenerateSpecialFoods(*myPlayer->getPlayerPosList()); // Student Comment: Regenerate only special foods after consumption
-                // } // Jethro -------------------------------------------------------------------------------------------- myGM
             }
             else
             {
@@ -125,10 +118,10 @@ void RunLogic(void)
                 myGM->incrementScore();
 
                 // Student Comment: Regenerate consumed food in a new position
-                myFood->regenerateFoodAt(i, *myPlayer->getPlayerPosList()); // Jethro----------------------------------- myGM
+                myFood->regenerateFoodAt(i, *myPlayer->getPlayerPosList());
             }
 
-            myFood->incrementFoodEaten(); // Student Comment: Increment food eaten counter // Jethro-------------------- myGM
+            myFood->incrementFoodEaten();
             break;
         }
     }
@@ -155,7 +148,6 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
-    // objPos playerPos = myPlayer->getPlayerPos(); <- Original code
     // Student Comment: Get food bin and snake body for rendering
     objPosArrayList* foodBin = myFood->getFoodBin();
     objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
@@ -167,7 +159,6 @@ void DrawScreen(void)
         {
             bool isBodyPart = false; // Student Comment: Flag to check if the current cell is part of the snake
 
-            // objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
             // Student Comment: Check if the current cell is occupied by a snake body part
             for (int k = 0; k < snakeBody->getSize(); k++)
             {
@@ -229,10 +220,6 @@ void DrawScreen(void)
 
     // Student Comment: Display game controls
     MacUILib_printf("Controls: \n[W]\tUp\n[A]\tLeft\n[S]\tDown\n[D]\tRight\n[Esc]\tQuit\n");
-
-    // for (int i = 0; i < TOTAL_FOOD; i++){
-    //     printf("%d %d %c", foodBin->getElement(i).getObjPos().pos->x, foodBin->getElement(i).getObjPos().pos->y, foodBin->getElement(i).getSymbol());
-    // }
 }
 
 // Student Comment: Controls the delay for the game loop

@@ -22,11 +22,6 @@ Food::~Food()
     
 }
 
-// void Food::generateFood(objPos blockOff)
-// {
-
-// }
-
 // Student Comment: Food management
 objPos Food::getFoodPos() const
 {
@@ -53,55 +48,11 @@ void Food::incrementFoodEaten()
     foodEaten++;
 }
 
-// Student Comment: Generates a new food item ensuring no overlap with snake body or other food items
-// void Food::generateFood(const objPosArrayList& snakeBody)
-// {
-//     bool validPosition = false;
-//     int x, y;
-
-//     while (!validPosition)
-//     {
-//         x = 1 + rand() % (mainGameMechsRef->getBoardSizeX() - 2);
-//         y = 1 + rand() % (mainGameMechsRef->getBoardSizeY() - 2);
-
-//         validPosition = true;
-
-//         // Student Comment: Check against snake body
-//         for (int i = 0; i < snakeBody.getSize(); i++)
-//         {
-//             objPos snakeSegment = snakeBody.getElement(i);
-//             if (snakeSegment.pos->x == x && snakeSegment.pos->y == y)
-//             {
-//                 validPosition = false;
-//                 break;
-//             }
-//         }
-
-//         // Student Comment: Check against existing food
-//         for (int i = 0; i < foodBin.getSize(); i++) 
-//         {
-//             objPos existingFood = foodBin.getElement(i);
-//             if (existingFood.pos->x == x && existingFood.pos->y == y) 
-//             {
-//                 validPosition = false;
-//                 break;
-//             }
-//         }
-//     }
-
-//     foodPos.setObjPos(x, y, '*');
-// }
-
 // Student Comment: Initializes the food bin with multiple food items
 void Food::initializeFoodBin(int numFoods)
 {
     for (int i = 0; i < numFoods; i++)
     {
-        // int x = 1 + rand() % (mainGameMechsRef->getBoardSizeX() - 2);
-        // int y = 1 + rand() % (mainGameMechsRef->getBoardSizeY() - 2);
-        // char symbol = (i == specialFoodIndex1 || i == specialFoodIndex2) ? '$' : '*';
-        // objPos food(x, y, symbol);
-        // foodBin->insertTail(food);
         objPos food(0, 0, 0);
         foodBin->insertTail(food);
         regenerateFoodAt(i, *playerRef->getPlayerPosList());
@@ -167,6 +118,7 @@ void Food::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
 
     objPos newFood(x, y, symbol);
 
+    // Alternative to setElement() in case the implementation is not allowed:
     // objPos food = foodBin->getElement(index);
     // food.setObjPos(x, y, symbol);
 

@@ -28,8 +28,7 @@ class objPosArrayList
         objPos getTailElement() const;
         objPos getElement(int index) const;
 
-        // Student Comment: New setElement method, pretty critical for the code
-        // to perform properly currently but can't tell if it is needed.
+        // Student Comment: New setElement method, used for food regeneration
         void setElement(int index, const objPos& newPos);
 };
 
