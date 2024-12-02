@@ -8,9 +8,35 @@ objPosArrayList::objPosArrayList()
     aList = new objPos[arrayCapacity];
 }
 
+objPosArrayList::objPosArrayList(int max)
+{
+    arrayCapacity = max;
+    listSize = 0;
+    aList = new objPos[arrayCapacity];
+}
+
 objPosArrayList::~objPosArrayList()
 {
     delete[] aList;
+}
+
+objPosArrayList& objPosArrayList::operator=(const objPosArrayList& reference)
+{
+    if (this != &reference){
+        arrayCapacity = reference.arrayCapacity;
+        listSize = reference.listSize;
+
+        aList = new objPos[arrayCapacity];
+
+        for (int i = 0; i < listSize; i++)
+        {
+            objPos copy = reference.getElement(i).getObjPos();
+            aList[i].pos->x = copy.pos->x;
+            aList[i].pos->y = copy.pos->y;
+            aList[i].symbol = copy.symbol;
+        }
+    }
+    return *this;
 }
 
 int objPosArrayList::getSize() const

@@ -23,14 +23,14 @@ class GameMechs
         int boardSizeX;
         int boardSizeY;
 
-        objPos food; // Student Comment: Current food object
-        objPosArrayList foodBin; // Student Comment: Food bin for storing multiple food items
+        // objPos food; // Student Comment: Current food object
+        // objPosArrayList foodBin; // Student Comment: Food bin for storing multiple food items
         
         // Student Comment: Indices for the special food items
-        int specialFoodIndex1;
-        int specialFoodIndex2;
+        // int specialFoodIndex1;
+        // int specialFoodIndex2;
 
-        int foodEaten; // Student Comment: Count of food consumed by the player
+        // int foodEaten; // Student Comment: Count of food consumed by the player
 
     public:
         // Student Comment: Constructors and destructor
@@ -64,24 +64,24 @@ class GameMechs
         void incrementScoreBy(int points);
         
         // More methods should be added here
-        // Student Comment: Food management
-        objPos getFood() const;
-        void generateFood(const objPosArrayList& snakeBody);
-        void initializeFoodBin(int numFoods = 5);
-        objPosArrayList* getFoodBin() const;
-        void regenerateFoodAt(int index, const objPosArrayList& snakeBody);
+        // // Student Comment: Food management
+        // objPos getFood() const;
+        // void generateFood(const objPosArrayList& snakeBody);
+        // void initializeFoodBin(int numFoods = 5);
+        // objPosArrayList* getFoodBin() const;
+        // void regenerateFoodAt(int index, const objPosArrayList& snakeBody);
 
-        // Student Comment: Special food effects
-        void applySpecialFoodEffect(int index, Player* player);
-        void regenerateAllFood(const objPosArrayList& snakeBody);
-        void regenerateSpecialFoods(const objPosArrayList& snakeBody);
+        // // Student Comment: Special food effects
+        // void applySpecialFoodEffect(int index, Player* player);
+        // void regenerateAllFood(const objPosArrayList& snakeBody);
+        // void regenerateSpecialFoods(const objPosArrayList& snakeBody);
 
-        // Student Comment: Food-related stats
-        int getFoodEaten() const;
-        void incrementFoodEaten();
+        // // Student Comment: Food-related stats
+        // int getFoodEaten() const;
+        // void incrementFoodEaten();
 
-        int getSpecialFoodIndex1() const;
-        int getSpecialFoodIndex2() const;
+        // int getSpecialFoodIndex1() const;
+        // int getSpecialFoodIndex2() const;
 };
 
 #endif

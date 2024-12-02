@@ -2,16 +2,19 @@
 #include "MacUILib.h"
 #include "objPos.h"
 #include "Player.h"
+#include "Food.h"
 
 using namespace std;
 
 #define DEFAULT_DELAY 25000
 #define SPEED_BOOST_DELAY 100
+#define TOTAL_FOOD 5
 
 // Student Comment: Global game state variables
 bool exitFlag;
 Player* myPlayer; // Student Comment: Player object representing the snake
 GameMechs* myGM; // Student Comment: Game mechanics object holding the game state
+Food* myFood;
 
 // Student Comment: Special food game speed boost effect
 int currentDelay = DEFAULT_DELAY; // Student Comment: Delay for controlling game speed
@@ -54,9 +57,7 @@ void Initialize(void)
     // Student Comment: Instantiate game mechanics and player objects
     myGM = new GameMechs();
     myPlayer = new Player(myGM);
-
-    // Student Comment: Initialize the food bin with the default number of food items
-    myGM->initializeFoodBin();
+    myFood = new Food(myGM, myPlayer, TOTAL_FOOD);
 }
 
 // Student Comment: Processes user input for controlling the snake
@@ -82,7 +83,7 @@ void RunLogic(void)
     myPlayer->updatePlayerDir(); // Student Comment: Update player (snake) direction based on input
 
     objPos playerPos = myPlayer->getPlayerPos(); // Student Comment: Get current player position
-    objPosArrayList* foodBin = myGM->getFoodBin(); // Student Comment: Get the food bin (list of food items)
+    objPosArrayList* foodBin = myFood->getFoodBin(); // Student Comment: Get the food bin (list of food items)
 
     bool foodConsumed = false; // Student Comment: Flag to track if any food was consumed
     int consumedFoodIndex = -1; // Student Comment: To track which food was consumed
@@ -101,21 +102,21 @@ void RunLogic(void)
             // Student Comment: Check if the food is special
             if (food.getSymbol() == '$')
             {
-                myGM->applySpecialFoodEffect(i, myPlayer); // Student Comment: Apply special food effect
+                myFood->applySpecialFoodEffect(i, myPlayer); // Student Comment: Apply special food effect // Jethro --- myGM
 
                 // Student Comment: Apply speed boost if the food is special food
-                if (i == myGM->getSpecialFoodIndex1())
+                if (i == myFood->getSpecialFoodIndex1())
                 {
                     speedBoostTimer = 200;
                     currentDelay = SPEED_BOOST_DELAY;
 
                     // Student Comment: Regenerate all food locations
-                    myGM->regenerateAllFood(*myPlayer->getPlayerPosList());
+                    // myFood->regenerateAllFood(*myPlayer->getPlayerPosList()); // Jethro -------------------------------- myGM
                 }
-                else if (i == myGM->getSpecialFoodIndex2())
-                {
-                    myGM->regenerateSpecialFoods(*myPlayer->getPlayerPosList()); // Student Comment: Regenerate only special foods after consumption
-                }
+                // else if (i == myFood->getSpecialFoodIndex2())
+                // {
+                //     // myFood->regenerateSpecialFoods(*myPlayer->getPlayerPosList()); // Student Comment: Regenerate only special foods after consumption
+                // } // Jethro -------------------------------------------------------------------------------------------- myGM
             }
             else
             {
@@ -124,10 +125,10 @@ void RunLogic(void)
                 myGM->incrementScore();
 
                 // Student Comment: Regenerate consumed food in a new position
-                myGM->regenerateFoodAt(i, *myPlayer->getPlayerPosList());
+                myFood->regenerateFoodAt(i, *myPlayer->getPlayerPosList()); // Jethro----------------------------------- myGM
             }
 
-            myGM->incrementFoodEaten(); // Student Comment: Increment food eaten counter
+            myFood->incrementFoodEaten(); // Student Comment: Increment food eaten counter // Jethro-------------------- myGM
             break;
         }
     }
@@ -156,7 +157,7 @@ void DrawScreen(void)
 
     // objPos playerPos = myPlayer->getPlayerPos(); <- Original code
     // Student Comment: Get food bin and snake body for rendering
-    objPosArrayList* foodBin = myGM->getFoodBin();
+    objPosArrayList* foodBin = myFood->getFoodBin();
     objPosArrayList* snakeBody = myPlayer->getPlayerPosList();
 
     // Student Comment: Loop through each row and column to draw the game board
@@ -222,11 +223,16 @@ void DrawScreen(void)
     }
 
     // Student Comment: Display score and food eaten on the screen
+    MacUILib_printf("Eat food [*] to grow the snake and increase your score!\nSpecial food [$] can either:\n\t1. Increase speed temporarily and gain 10 points\n\t2. Grow the snake by 10 and score by 50\n");
     MacUILib_printf("Score: %d\t", myGM->getScore());
-    MacUILib_printf("Food Eaten: %d\n", myGM->getFoodEaten());
+    MacUILib_printf("Food Eaten: %d\n", myFood->getFoodEaten());
 
     // Student Comment: Display game controls
-    MacUILib_printf("Controls: [W] Up [A] Left [S] Down [D] Right [Esc] Quit\n");
+    MacUILib_printf("Controls: \n[W]\tUp\n[A]\tLeft\n[S]\tDown\n[D]\tRight\n[Esc]\tQuit\n");
+
+    // for (int i = 0; i < TOTAL_FOOD; i++){
+    //     printf("%d %d %c", foodBin->getElement(i).getObjPos().pos->x, foodBin->getElement(i).getObjPos().pos->y, foodBin->getElement(i).getSymbol());
+    // }
 }
 
 // Student Comment: Controls the delay for the game loop
@@ -257,7 +263,7 @@ void CleanUp(void)
     {
         MacUILib_printf("\nGame Over: You died.\n");
         MacUILib_printf("\nFinal Score: %d\n", myGM->getScore());
-        MacUILib_printf("Food Eaten: %d\n", myGM->getFoodEaten());
+        MacUILib_printf("Food Eaten: %d\n", myFood->getFoodEaten());
     }
     else if (myGM->getExitFlagStatus())
     {
