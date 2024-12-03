@@ -128,11 +128,13 @@ void Food::regenerateFoodAt(int index, const objPosArrayList& snakeBody)
 // Student Comment: Applies effects of special food and regenerates it
 void Food::applySpecialFoodEffect(int index, Player* player)
 {
+    // Student Comment: Apply effect for special food 1: Increase score by 10 and regenerate all food
     if (index == specialFoodIndex1)
     {
         mainGameMechsRef->incrementScoreBy(10);
         regenerateAllFood(*playerRef->getPlayerPosList());
     }
+    // Student Comment: Apply effect for special food 2: Increase score by 50, regenerate special foods, and grow snake by set length
     else if (index == specialFoodIndex2)
     {
         mainGameMechsRef->incrementScoreBy(50);
@@ -140,6 +142,7 @@ void Food::applySpecialFoodEffect(int index, Player* player)
         player->growBy(10);
     }
 
+    // Student Comment: Regenerate the specific food after its effect is applied
     regenerateFoodAt(index, *player->getPlayerPosList());
 }
 
