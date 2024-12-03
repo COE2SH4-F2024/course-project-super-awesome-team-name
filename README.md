@@ -4,7 +4,6 @@ Course Project
 
 You must watch the briefing video and read through the manual to engage in the development activities.
 
-
 Section for Member 1: [L04] [C02]
 Section for Member 2: [L05] [C02]
 
