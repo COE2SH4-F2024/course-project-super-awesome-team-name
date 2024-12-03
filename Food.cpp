@@ -12,7 +12,7 @@ Food::Food(GameMechs* thisGMRef, Player* thisPlayerRef, int numFoods)
     specialFoodIndex1 = 0;
     specialFoodIndex2 = 1;
     objPos foodPos;
-    foodBin = new objPosArrayList(); // Student Comment: Food bin for storing multiple food items
+    foodBin = new objPosArrayList(numFoods); // Student Comment: Food bin for storing multiple food items
 
     initializeFoodBin(numFoods);
 }

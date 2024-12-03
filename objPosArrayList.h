@@ -14,6 +14,7 @@ class objPosArrayList
 
     public:
         objPosArrayList();
+        objPosArrayList(int max);
         ~objPosArrayList();
         objPosArrayList& operator=(const objPosArrayList& reference);
 
@@ -27,7 +28,8 @@ class objPosArrayList
         objPos getTailElement() const;
         objPos getElement(int index) const;
 
-        // Student Comment: New setElement method, used for food regeneration
+        // Student Comment: New setElement method, pretty critical for the code
+        // to perform properly currently but can't tell if it is needed.
         void setElement(int index, const objPos& newPos);
 };
 
