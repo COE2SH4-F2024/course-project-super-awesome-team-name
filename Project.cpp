@@ -214,8 +214,8 @@ void DrawScreen(void)
     }
 
     // Student Comment: Display score and food eaten on the screen
-    MacUILib_printf("Eat food [*] to grow the snake and increase your score!\nSpecial food [$] can either:\n\t1. Increase speed temporarily and gain 10 points\n\t2. Grow the snake by 10 and score by 50\n");
-    MacUILib_printf("Score: %d\t", myGM->getScore());
+    MacUILib_printf("Eat food [*] to grow the snake and increase your score!\nSpecial food [$] will reset the position of some food and can either:\n\t1. Increase speed temporarily and gain 10 points\n\t2. Grow the snake by 10 and score by 50\n");
+    MacUILib_printf("\nScore: %d\n", myGM->getScore());
     MacUILib_printf("Food Eaten: %d\n", myFood->getFoodEaten());
 
     // Student Comment: Display game controls
