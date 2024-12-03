@@ -14,7 +14,6 @@ class objPosArrayList
 
     public:
         objPosArrayList();
-        objPosArrayList(int max);
         ~objPosArrayList();
         objPosArrayList& operator=(const objPosArrayList& reference);
 
